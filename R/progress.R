@@ -233,7 +233,7 @@ pb_init <- function(self, private, format, total, width, stream,
                     show_after, force) {
 
   assert_character_scalar(format)
-  assert_nonnegative_scalar(total <- as.numeric(total), na = TRUE)
+  assert_nonnegative(total <- as.numeric(total), 1:2, na = TRUE)
   assert_nonzero_count(width)
   assert_single_char(complete)
   assert_single_char(incomplete)
@@ -245,7 +245,6 @@ pb_init <- function(self, private, format, total, width, stream,
   private$first <- TRUE
   private$supported <- force || is_supported(stderr())
   private$format <- format
-  private$total <- total
   private$width <- width
   private$chars$complete <- complete
   private$chars$incomplete <- incomplete
@@ -254,6 +253,13 @@ pb_init <- function(self, private, format, total, width, stream,
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
   private$spin <- spin_symbols()
+
+  if (length(total) == 1L) {
+    private$total <- total
+  } else {
+    private$current <- total[[1]]
+    private$total <- total[[2]]
+  }
 
   private$has_token <- pb_update_has_token(private$has_token, format)
 

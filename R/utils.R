@@ -92,6 +92,15 @@ assert_nonnegative_scalar <- function(x, finite = TRUE, na = FALSE) {
   stopifnot(na || x >= 0)
 }
 
+assert_nonnegative <- function(x, n, finite = TRUE, na = FALSE) {
+  stopifnot(
+    is.numeric(x),
+    length(x) %in% n,
+    na || !is.na(x),
+    na || !finite || is.finite(x),
+    na || x >= 0
+  )
+}
 
 assert_ratio <- function(x) {
   assert_nonnegative_scalar(x)
